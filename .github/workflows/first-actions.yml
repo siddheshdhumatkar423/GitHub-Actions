@@ -1,29 +1,18 @@
-name: My First GitHub Actions
+name: Node.js CI
 
 on: [push]
 
 jobs:
   build:
-    runs-on: self-hosted
 
-    strategy:
-      matrix:
-        python-version: [3.8, 3.9]
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest
-
-    - name: Run tests
-      run: |
-        cd src
-        python -m pytest addition.py
-        python -m pytest Sub.py
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
